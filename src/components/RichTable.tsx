@@ -168,11 +168,9 @@ const RichTable = function ({
                   key={item.id}
                   className="transition-colors hover:bg-muted/50"
                 >
-                  <TableCell className="font-medium">{item.id}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.age}</TableCell>
-                  <TableCell>{item.email}</TableCell>
-                  <TableCell>{item.role}</TableCell>
+                  {mapping.map((it) => (
+                    <TableCell>{item[it.field]}</TableCell>
+                  ))}
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
                       <Button

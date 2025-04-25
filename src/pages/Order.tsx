@@ -3,20 +3,20 @@ import { useDialog } from "@/context/DialogContext";
 
 import { FC } from "react";
 import { toast } from "sonner";
-import { useProducts } from "../hooks/useProduct";
+import { useOrders } from "../hooks/useOrder";
 
 const Product: FC = () => {
   const { openDeleteDialog } = useDialog();
 
   const mapping = [
-    { label: "Name", field: "name" },
-    { label: "Category", field: "category" },
-    { label: "Preparation Time", field: "preparationTime" },
-    { label: "Price", field: "price" },
-    { label: "Stock", field: "stock" },
+    { label: "Delivery", field: "delivery" },
+    { label: "Payment Status", field: "paymentStatus" },
+    { label: "Payment Method", field: "paymentMethod" },
+    { label: "Status", field: "status" },
+    { label: "Amount", field: "totalAmount" },
   ];
   //
-  const { products: initialData, isLoading } = useProducts();
+  const { orders: initialData, isLoading } = useOrders();
   console.log(initialData);
   if (isLoading) return <p>Loading products...</p>;
 
