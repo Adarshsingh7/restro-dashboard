@@ -4,6 +4,7 @@ import { useDialog } from "@/context/DialogContext";
 import { FC } from "react";
 import { toast } from "sonner";
 import { useOrders } from "../hooks/useOrder";
+import CenteredLoader from "@/ui/loader";
 
 const Product: FC = () => {
   const { openDeleteDialog } = useDialog();
@@ -17,8 +18,15 @@ const Product: FC = () => {
   ];
   //
   const { orders: initialData, isLoading } = useOrders();
-  console.log(initialData);
-  if (isLoading) return <p>Loading products...</p>;
+  if (isLoading)
+    return (
+      <CenteredLoader
+        blurIntensity="low"
+        fadeIn={true}
+        type="dots"
+        color="green"
+      />
+    );
 
   const handleDelete = () => {
     toast.success("Employee deleted successfully!");

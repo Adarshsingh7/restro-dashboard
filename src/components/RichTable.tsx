@@ -148,8 +148,8 @@ const RichTable = function ({
           <Table>
             <TableHeader>
               <TableRow>
-                {mapping.map((el) => (
-                  <TableHead className="">
+                {mapping.map((el, i) => (
+                  <TableHead key={i} className="">
                     <Button
                       variant="ghost"
                       onClick={() => handleSort(el.field)}
@@ -163,13 +163,18 @@ const RichTable = function ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedData.map((item) => (
+              {paginatedData.map((item, i) => (
                 <TableRow
-                  key={item.id}
+                  key={i}
                   className="transition-colors hover:bg-muted/50"
                 >
-                  {mapping.map((it) => (
-                    <TableCell>{item[it.field]}</TableCell>
+                  {mapping.map((it, i) => (
+                    <TableCell
+                      className="capitalize text-center align-middle"
+                      key={i}
+                    >
+                      {item[it.field]}
+                    </TableCell>
                   ))}
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">

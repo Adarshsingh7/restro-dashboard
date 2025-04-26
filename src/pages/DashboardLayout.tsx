@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button";
 import {
   Menu,
   X,
-  User,
   Lock,
-  Bell,
-  Palette,
   Home,
-  Package,
   LogOut,
   Compass,
+  ChefHat,
+  CookingPot,
 } from "lucide-react";
 import { Outlet, NavLink } from "react-router-dom";
 import { WrapperDelete } from "@/components/WrapperDelete";
@@ -36,11 +34,6 @@ export default function DashboardLayout() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
-  const MemoizedPackageIcon = useMemo(
-    () => <Package className="mr-2 h-4 w-4" />,
-    [],
-  );
   const MemoizedHomeIcon = useMemo(() => <Home className="mr-2 h-4 w-4" />, []);
 
   return (
@@ -68,16 +61,18 @@ export default function DashboardLayout() {
                     }`
                   }
                 >
-                  {tab.name === "product" && MemoizedPackageIcon}
+                  {tab.name === "product" && (
+                    <ChefHat className="mr-2 h-4 w-4" />
+                  )}
                   {tab.name === "home" && MemoizedHomeIcon}
                   {tab.name === "account" && <Lock className="mr-2 h-4 w-4" />}
                   {tab.name === "map" && <Compass className="mr-2 h-4 w-4" />}
-                  {tab.name === "notifications" && (
-                    <Bell className="mr-2 h-4 w-4" />
+                  {tab.name === "order" && (
+                    <CookingPot className="mr-2 h-4 w-4" />
                   )}
-                  {tab.name === "appearance" && (
+                  {/* {tab.name === "appearance" && (
                     <Palette className="mr-2 h-4 w-4" />
-                  )}
+                  )} */}
                   {tab.label}
                 </NavLink>
               </li>
