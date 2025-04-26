@@ -16,7 +16,6 @@ const Product: FC = () => {
     { label: "Status", field: "status" },
     { label: "Amount", field: "totalAmount" },
   ];
-  //
   const { orders: initialData, isLoading } = useOrders();
   if (isLoading)
     return (
