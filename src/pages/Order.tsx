@@ -32,9 +32,9 @@ const Product: FC = () => {
       />
     );
 
-  const filteredData = initialData
-    .filter((el) => el.status === "new")
-    .sort((a: , b) => a.createdAt - b.createdAt);
+  // const filteredData = initialData
+  //   .filter((el) => el.status === "new")
+  //   .sort((a, b) => a.createdAt - b.createdAt);
 
   const handleDelete = () => {
     toast.success("Employee deleted successfully!");

@@ -28,14 +28,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MenuItemFormValues } from "./MenuItemForm";
 
 type SortDirection = "asc" | "desc" | null;
 
 interface RichTableProps {
   initialData: any[];
   mapping: { label: string; field: string }[];
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  onOpen: () => void;
   label: string;
 }
 
@@ -44,6 +46,7 @@ const RichTable = function ({
   mapping,
   onEdit,
   onDelete,
+  onOpen,
   label,
 }: RichTableProps) {
   const data = initialData;
@@ -106,7 +109,9 @@ const RichTable = function ({
     return <ChevronsUpDown className="ml-2 h-4 w-4" />;
   };
 
-  const handleAddRecord = () => {};
+  const handleAddRecord = () => {
+    onOpen();
+  };
 
   return (
     <Card className="w-full max-w-4xl mx-auto">

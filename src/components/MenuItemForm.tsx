@@ -29,12 +29,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Link as LinkIcon } from "lucide-react";
 
-type MenuItemFormValues = {
+export type MenuItemFormValues = {
   name: string;
   description: string;
   price: string;
   stock: string;
-  prepTime: string;
+  preparationTime: string;
   category: "appetizer" | "main course" | "desert" | "beverages" | "snacks";
   imageUrl?: string;
   imageFile?: File | null;
@@ -57,7 +57,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
       description: "",
       price: "",
       stock: "",
-      prepTime: "",
+      preparationTime: "",
       category: "appetizer",
       imageUrl: "",
     },
@@ -177,7 +177,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
             <div className="grid grid-cols-2 gap-3">
               <FormField
                 control={form.control}
-                name="prepTime"
+                name="preparationTime"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Prep Time (min)</FormLabel>
