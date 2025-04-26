@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Wrapper from "./pages/Wrapper";
 import InteractiveMap from "./pages/InteractiveMap";
 import { useMemo } from "react"; // Import useMemo
+import LandingPage from "./pages/LandingPage";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div className="h-screen">Home</div>,
+        element: <LandingPage />,
       },
     ],
   },
