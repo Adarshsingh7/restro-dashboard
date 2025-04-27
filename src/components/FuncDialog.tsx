@@ -1,24 +1,25 @@
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 interface Props {
   children: React.ReactNode;
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenForm: () => void;
+  onCloseForm: () => void;
 }
 
-export function FuncDialog({ children, open, onOpenChange }: Props) {
+export function FuncDialog({ children, open, onOpenForm, onCloseForm }: Props) {
+  function handleChangeFormState(val: boolean) {
+    if (val) {
+      onOpenForm();
+    } else {
+      onCloseForm();
+    }
+  }
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-white">
+    <Dialog open={open} onOpenChange={handleChangeFormState}>
+      <DialogTitle></DialogTitle>
+      <DialogContent className="bg-white w-fit max-w-full">
         {children}
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild></DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

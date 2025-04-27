@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Link as LinkIcon } from "lucide-react";
+import { Order } from "@/types/cartType";
 
 export type MenuItemFormValues = {
   name: string;
@@ -41,7 +42,7 @@ export type MenuItemFormValues = {
 };
 
 type Props = {
-  initialData?: MenuItemFormValues | null;
+  initialData?: Order | null;
   onSubmit: (values: MenuItemFormValues) => void;
   onCancel: () => void;
 };

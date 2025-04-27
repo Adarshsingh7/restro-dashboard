@@ -30,11 +30,7 @@ const useProducts = () => {
 
 const useAddProduct = () => {
   const querClient = useQueryClient();
-  const {
-    mutate: addProduct,
-    isPending,
-    isError,
-  } = useMutation({
+  const { mutate: addProduct, isError } = useMutation({
     mutationFn: async (newProduct: MenuItemFormValues) => {
       try {
         const response = await fetch(
@@ -63,7 +59,7 @@ const useAddProduct = () => {
     },
   });
 
-  return { addProduct, isPending, isError };
+  return { addProduct, isError };
 };
 
 const useUpdateProduct = () => {
@@ -71,7 +67,7 @@ const useUpdateProduct = () => {
 
   const {
     mutate: updateProduct,
-    isPending,
+    isLoading,
     isError,
   } = useMutation({
     mutationFn: async ({
@@ -108,7 +104,7 @@ const useUpdateProduct = () => {
     },
   });
 
-  return { updateProduct, isPending, isError };
+  return { updateProduct, isLoading, isError };
 };
 
 const useDeleteProduct = () => {
@@ -116,7 +112,7 @@ const useDeleteProduct = () => {
 
   const {
     mutate: deleteProduct,
-    isPending,
+    isLoading,
     isError,
   } = useMutation({
     mutationFn: async (id: string) => {
@@ -141,7 +137,7 @@ const useDeleteProduct = () => {
     },
   });
 
-  return { deleteProduct, isPending, isError };
+  return { deleteProduct, isLoading, isError };
 };
 
 export { useProducts, useAddProduct, useUpdateProduct, useDeleteProduct };

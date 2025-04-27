@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import {
   ChevronDown,
@@ -28,7 +26,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MenuItemFormValues } from "./MenuItemForm";
 
 type SortDirection = "asc" | "desc" | null;
 
@@ -37,7 +34,6 @@ interface RichTableProps {
   mapping: { label: string; field: string }[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onOpen: () => void;
   label: string;
 }
 
@@ -46,7 +42,6 @@ const RichTable = function ({
   mapping,
   onEdit,
   onDelete,
-  onOpen,
   label,
 }: RichTableProps) {
   const data = initialData;
@@ -110,7 +105,7 @@ const RichTable = function ({
   };
 
   const handleAddRecord = () => {
-    onOpen();
+    console.log("adding record");
   };
 
   return (
@@ -186,7 +181,7 @@ const RichTable = function ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onEdit(item.id)}
+                        onClick={() => onEdit(item._id)}
                       >
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
