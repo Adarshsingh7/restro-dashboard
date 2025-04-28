@@ -37,10 +37,11 @@ export default function DashboardLayout() {
   const MemoizedHomeIcon = useMemo(() => <Home className="mr-2 h-4 w-4" />, []);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100" id="fancyPattern">
       {/* Sidebar */}
       <aside
-        className={`bg-white w-64 min-h-screen flex flex-col ${
+        id="sidebar"
+        className={`bg-white w-64 min-h-screen flex flex-col border border-dashed ${
           isSidebarOpen ? "block" : "hidden"
         } md:block`}
       >

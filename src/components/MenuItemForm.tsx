@@ -28,22 +28,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Link as LinkIcon } from "lucide-react";
-import { Order } from "@/types/cartType";
-
-export type MenuItemFormValues = {
-  name: string;
-  description: string;
-  price: string;
-  stock: string;
-  preparationTime: string;
-  category: "appetizer" | "main course" | "desert" | "beverages" | "snacks";
-  imageUrl?: string;
-  imageFile?: File | null;
-};
+import { MenuItem } from "@/types/menuType";
 
 type Props = {
-  initialData?: Order | null;
-  onSubmit: (values: MenuItemFormValues) => void;
+  initialData?: MenuItem | null;
+  onSubmit: (values: Partial<MenuItem>) => void;
   onCancel: () => void;
 };
 
@@ -52,15 +41,15 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const form = useForm<MenuItemFormValues>({
+  const form = useForm<Partial<MenuItem>>({
     defaultValues: initialData || {
       name: "",
       description: "",
-      price: "",
-      stock: "",
-      preparationTime: "",
+      price: 0,
+      stock: 0,
+      preparationTime: 0,
       category: "appetizer",
-      imageUrl: "",
+      image: "",
     },
   });
 
@@ -71,11 +60,11 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
-      form.setValue("imageFile", file);
+      // form.setValue("imageFile", file);
     }
   };
 
-  const handleFormSubmit = (values: MenuItemFormValues) => {
+  const handleFormSubmit = (values: Partial<MenuItem>) => {
     // Combine form values with the selected file if using file upload
     const submitData = {
       ...values,
@@ -113,7 +102,11 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Item name" {...field} />
+                    <Input
+                      placeholder="Item name"
+                      defaultValue={initialData?.name}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,6 +121,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
+                      defaultValue={initialData?.description}
                       placeholder="Item description"
                       className="resize-none"
                       rows={2}
@@ -148,6 +142,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                     <FormLabel>Price ($)</FormLabel>
                     <FormControl>
                       <Input
+                        defaultValue={initialData?.price}
                         type="number"
                         min="0"
                         step="0.01"
@@ -163,6 +158,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
               <FormField
                 control={form.control}
                 name="stock"
+                defaultValue={initialData?.stock}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Stock</FormLabel>
@@ -183,7 +179,13 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                   <FormItem>
                     <FormLabel>Prep Time (min)</FormLabel>
                     <FormControl>
-                      <Input type="number" min="0" placeholder="0" {...field} />
+                      <Input
+                        defaultValue={initialData?.preparationTime}
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,7 +200,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                     <FormLabel>Category</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={initialData?.category || "appetizer"}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -238,7 +240,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                 <TabsContent value="url" className="pt-2">
                   <FormField
                     control={form.control}
-                    name="imageUrl"
+                    name="image"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -257,15 +259,13 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                       onChange={handleFileChange}
                       className="cursor-pointer"
                     />
-                    {imagePreview && (
-                      <div className="mt-2">
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="h-32 w-auto object-cover rounded border"
-                        />
-                      </div>
-                    )}
+                    <div className="mt-2">
+                      <img
+                        src={initialData?.image}
+                        alt="Preview"
+                        className="h-32 w-auto object-cover rounded border"
+                      />
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>

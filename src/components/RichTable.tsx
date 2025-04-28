@@ -189,7 +189,7 @@ const RichTable = function ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onDelete(item.id)}
+                        onClick={() => onDelete(item._id)}
                       >
                         <Trash2 className="h-4 w-4" />
                         <span className="sr-only">Delete</span>

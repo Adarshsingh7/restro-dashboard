@@ -14,6 +14,7 @@ import { useMenu } from "@/features/menuFeatures/useMenu";
 import { Order } from "@/types/orderType";
 import CenteredLoader from "@/ui/CenteredLoader";
 import { MenuItem } from "@/types/menuType";
+import { useUpdateOrder } from "@/features/order/useOrder";
 
 interface Props {
   initialData: Order;
@@ -23,6 +24,8 @@ export default function CompactOrderDetails({ initialData }: Props) {
   const [order, setOrder] = useState<Order>(initialData);
   const [currentSlide, setCurrentSlide] = useState(0);
   const itemsPerSlide = 3; // Number of items visible at once
+
+  const { updateOrder } = useUpdateOrder();
 
   function getOrderedMenuItems(
     menuItems: MenuItem[],
@@ -45,7 +48,7 @@ export default function CompactOrderDetails({ initialData }: Props) {
   const filteredMenuItems = getOrderedMenuItems(menuItems || [], initialData);
 
   // Calculate total number of slides
-  const totalSlides = Math.ceil(order.items.length / itemsPerSlide);
+  const totalSlides = Math.ceil(filteredMenuItems.length / itemsPerSlide);
 
   // Status options
   const statusOptions = ["new", "preparing", "completed", "cancelled"];
@@ -79,6 +82,16 @@ export default function CompactOrderDetails({ initialData }: Props) {
     setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   };
 
+  // Get current slide items
+  const getCurrentSlideItems = () => {
+    const startIndex = currentSlide * itemsPerSlide;
+    const endIndex = Math.min(
+      startIndex + itemsPerSlide,
+      filteredMenuItems.length,
+    );
+    return filteredMenuItems.slice(startIndex, endIndex);
+  };
+
   // Status badge styles
   const getStatusBadgeStyle = (status: string) => {
     switch (status) {
@@ -103,8 +116,11 @@ export default function CompactOrderDetails({ initialData }: Props) {
 
   if (isLoading) return <CenteredLoader />;
 
+  // Get the items for the current slide
+  const currentSlideItems = getCurrentSlideItems();
+
   return (
-    <div className="w-full mx-auto p-4 bg-white rounded-lg shadow">
+    <div className="w-full mx-auto p-4 bg-white rounded-lg shadow h-[90vh] overflow-auto">
       {/* Header with Order ID and Status */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-lg font-bold">Order #{order._id}</h1>
@@ -147,7 +163,7 @@ export default function CompactOrderDetails({ initialData }: Props) {
         </div>
 
         <div className="grid grid-cols-3 gap-2">
-          {filteredMenuItems.map((item) => (
+          {currentSlideItems.map((item) => (
             <div key={item._id} className="relative">
               <div className="aspect-square overflow-hidden rounded-md shadow-sm">
                 <img
@@ -202,11 +218,18 @@ export default function CompactOrderDetails({ initialData }: Props) {
                 </h4>
                 <Select
                   value={order.paymentStatus}
-                  onValueChange={(value) =>
+                  onValueChange={(value) => {
                     handlePaymentStatusChange(
                       value as "pending" | "paid" | "failed",
-                    )
-                  }
+                    );
+                    updateOrder({
+                      id: order._id,
+                      updatedData: {
+                        ...order,
+                        paymentStatus: value as "pending" | "paid" | "failed",
+                      },
+                    });
+                  }}
                 >
                   <SelectTrigger className="h-8 text-xs">
                     <SelectValue placeholder="Select payment status" />
@@ -227,11 +250,22 @@ export default function CompactOrderDetails({ initialData }: Props) {
                 </h4>
                 <Select
                   value={order.status}
-                  onValueChange={(value) =>
+                  onValueChange={(value) => {
                     handleStatusChange(
                       value as "new" | "preparing" | "completed" | "cancelled",
-                    )
-                  }
+                    );
+                    updateOrder({
+                      id: order._id,
+                      updatedData: {
+                        ...order,
+                        status: value as
+                          | "new"
+                          | "preparing"
+                          | "completed"
+                          | "cancelled",
+                      },
+                    });
+                  }}
                 >
                   <SelectTrigger className="h-8 text-xs">
                     <SelectValue placeholder="Select status" />

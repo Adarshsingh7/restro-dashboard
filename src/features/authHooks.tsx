@@ -15,13 +15,13 @@ interface Error {
 
 // Hook for checking if the user is authenticated
 const useIsAuthenticated = () => {
-  const { data, refetch, isPending, isError } = useQuery<User>({
+  const { data, refetch, isLoading, isError } = useQuery<User>({
     queryKey: ["user"],
     queryFn: () => auth.isAuthenticated(),
     retry: false,
   });
 
-  return { user: data, refetch, isPending: isPending, isError };
+  return { user: data, refetch, isLoading, isError };
 };
 
 // Hook for logging in
@@ -29,7 +29,7 @@ const useHandleLogin = () => {
   const queryClient = useQueryClient();
   const { refetch } = useIsAuthenticated();
 
-  const { mutate, isPending, isError } = useMutation({
+  const { mutate, isLoading, isError } = useMutation({
     mutationFn: (data: { email: string; password: string }) => {
       toast.loading("Logging in...", { id: "login" });
       return auth.login(data);
@@ -46,7 +46,7 @@ const useHandleLogin = () => {
     },
   });
 
-  return { login: mutate, isPending, isError };
+  return { login: mutate, isLoading, isError };
 };
 
 // Hook for logging out
@@ -54,7 +54,7 @@ const useHandleLogout = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate, isPending, isError } = useMutation({
+  const { mutate, isLoading, isError } = useMutation({
     mutationFn: () => auth.logout(),
     onSuccess: () => {
       toast.success("Logged out successfully");
@@ -66,7 +66,7 @@ const useHandleLogout = () => {
     },
   });
 
-  return { logout: mutate, isPending, isError };
+  return { logout: mutate, isLoading, isError };
 };
 
 export { useHandleLogin, useIsAuthenticated, useHandleLogout };

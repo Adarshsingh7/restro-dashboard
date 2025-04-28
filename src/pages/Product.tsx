@@ -2,22 +2,25 @@ import RichTable from "@/components/RichTable";
 import { useDialog } from "@/context/DialogContext";
 
 import { FC, useState } from "react";
-import {
-  useProducts,
-  useAddProduct,
-  useUpdateProduct,
-  useDeleteProduct,
-} from "../hooks/useProduct";
-import CenteredLoader from "@/ui/loader";
+import CenteredLoader from "@/ui/CenteredLoader";
 import { FuncDialog } from "@/components/FuncDialog";
-import MenuItemForm, { MenuItemFormValues } from "@/components/MenuItemForm";
+import MenuItemForm from "@/components/MenuItemForm";
+import {
+  useAddProduct,
+  useDeleteMenuItem,
+  useMenu,
+  useUpdateMenuItem,
+} from "@/features/menuFeatures/useMenu";
+import { MenuItem } from "@/types/menuType";
 
 const Product: FC = () => {
-  const { openDeleteDialog } = useDialog();
-  const { addProduct, isPending } = useAddProduct();
-  const { updateProduct, isPending: isEditing } = useUpdateProduct();
-  const { deleteProduct, isPending: isDeleting } = useDeleteProduct();
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const { openDeleteDialog } = useDialog();
+  const { addProduct } = useAddProduct();
+  const { updateMenuItem } = useUpdateMenuItem();
+  const { deleteMenuItem } = useDeleteMenuItem();
 
   const mapping = [
     { label: "Name", field: "name" },
@@ -26,53 +29,64 @@ const Product: FC = () => {
     { label: "Price", field: "price" },
     { label: "Stock", field: "stock" },
   ];
-  //
-  const { products: initialData, isLoading } = useProducts();
-  if (isLoading || isPending || isDeleting || isEditing)
-    return <CenteredLoader />;
+
+  const { data: initialData, isLoading } = useMenu();
+  if (isLoading) return <CenteredLoader />;
 
   const handleDelete = (id: string) => {
-    openDeleteDialog({
-      title: "Delete Product",
-      description: "Are you sure you want to delete this product?",
-      onConfirm: () => deleteProduct(id),
-    });
+    openDeleteDialog(() => deleteMenuItem({ id }));
   };
 
-  const handleEdit = (id: string, updatedProduct: MenuItemFormValues) => {
+  const handleEdit = (id: string) => {
     setIsFormOpen(true);
-    updateProduct(
-      { id, updatedProduct },
-      {
-        onSuccess: () => setIsFormOpen(false),
-      },
-    );
+    if (!initialData) return;
+    const selected =
+      initialData.find((item: MenuItem) => item._id === id) || null;
+    setSelectedItem(selected);
   };
 
-  const handleAdd = (data: MenuItemFormValues) => {
-    addProduct(data, {
-      onSuccess: () => setIsFormOpen(false),
-    });
+  const handleAdd = (data: Partial<MenuItem>) => {
+    addProduct({ data });
+  };
+
+  const handleUpdateSubmit = async (data: Partial<MenuItem>) => {
+    if (!selectedItem) return;
+    await updateMenuItem({ id: selectedItem._id, updatedData: data });
+    setIsFormOpen(false);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
+
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
   };
 
   return (
     <div className="flex flex-col gap-10">
       {isFormOpen ? (
-        <FuncDialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <FuncDialog
+          open={isFormOpen}
+          onCloseForm={handleCloseForm}
+          onOpenForm={handleOpenForm}
+        >
           <MenuItemForm
+            initialData={selectedItem}
             onCancel={() => setIsFormOpen(false)}
-            onSubmit={handleAdd}
+            onSubmit={handleUpdateSubmit}
           />
         </FuncDialog>
       ) : null}
-      <RichTable
-        initialData={initialData}
-        mapping={mapping}
-        onDelete={() => openDeleteDialog(handleDelete)}
-        label="Employee List"
-        onOpen={() => setIsFormOpen(true)}
-        onEdit={handleEdit}
-      />
+      {initialData ? (
+        <RichTable
+          initialData={initialData}
+          mapping={mapping}
+          onDelete={(id: string) => handleDelete(id)}
+          label="Employee List"
+          onEdit={handleEdit}
+        />
+      ) : null}
     </div>
   );
 };

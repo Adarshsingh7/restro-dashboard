@@ -2,13 +2,13 @@ import RichTable from "@/components/RichTable";
 import { useDialog } from "@/context/DialogContext";
 
 import { FC, useState } from "react";
-import { toast } from "sonner";
-import { useOrders } from "../hooks/useOrder";
+import { useDeleteOrder, useOrders } from "@/features/order/useOrder";
 import CenteredLoader from "@/ui/CenteredLoader";
 import { FuncDialog } from "@/components/FuncDialog";
 import { Order } from "@/types/orderType";
 import { formatDateTime } from "@/utils/formatDateTime";
 import OrderItemForm from "@/components/OrderItemForm";
+import ErrorPage from "./ErrorPage";
 
 const Product: FC = () => {
   const { openDeleteDialog } = useDialog();
@@ -24,6 +24,7 @@ const Product: FC = () => {
     { label: "Amount", field: "totalAmount" },
   ];
   const { orders: initialData, isLoading } = useOrders();
+  const { deleteOrder } = useDeleteOrder();
 
   if (isLoading)
     return (
@@ -34,6 +35,8 @@ const Product: FC = () => {
         color="green"
       />
     );
+
+  if (!initialData) return <ErrorPage />;
 
   const newOrders = initialData
     .filter((el: Order) => el.status === "new")
@@ -58,8 +61,8 @@ const Product: FC = () => {
       createdAt: el.createdAt ? formatDateTime(el.createdAt) : null,
     }));
 
-  const handleDelete = () => {
-    toast.success("Employee deleted successfully!");
+  const handleDelete = (id: string) => {
+    deleteOrder({ id });
   };
 
   const handleEdit = (id: string) => {
@@ -89,21 +92,21 @@ const Product: FC = () => {
       <RichTable
         initialData={newOrders}
         mapping={mapping}
-        onDelete={() => openDeleteDialog(handleDelete)}
+        onDelete={(id) => openDeleteDialog(() => handleDelete(id))}
         label="New Orders List"
         onEdit={handleEdit}
       />
       <RichTable
         initialData={pendingOrders}
         mapping={mapping}
-        onDelete={() => openDeleteDialog(handleDelete)}
+        onDelete={(id) => openDeleteDialog(() => handleDelete(id))}
         label="Pending Orders List"
         onEdit={handleEdit}
       />
       <RichTable
         initialData={completedOrders}
         mapping={mapping}
-        onDelete={() => openDeleteDialog(handleDelete)}
+        onDelete={(id) => openDeleteDialog(() => handleDelete(id))}
         label="Completed & Cancelled Orders List"
         onEdit={handleEdit}
       />
