@@ -44,13 +44,12 @@ const Product: FC = () => {
       initialData.find((item: MenuItem) => item._id === id) || null;
     setSelectedItem(selected);
   };
-
-  const handleAdd = (data: Partial<MenuItem>) => {
-    addProduct({ data });
-  };
-
-  const handleUpdateSubmit = async (data: Partial<MenuItem>) => {
-    if (!selectedItem) return;
+  const handleFormSubmit = async (data: Partial<MenuItem>) => {
+    if (!selectedItem) {
+      addProduct({ data });
+      setIsFormOpen(false);
+      return;
+    }
     await updateMenuItem({ id: selectedItem._id, updatedData: data });
     setIsFormOpen(false);
   };
@@ -61,6 +60,7 @@ const Product: FC = () => {
 
   const handleOpenForm = () => {
     setIsFormOpen(true);
+    setSelectedItem(null);
   };
 
   return (
@@ -74,12 +74,13 @@ const Product: FC = () => {
           <MenuItemForm
             initialData={selectedItem}
             onCancel={() => setIsFormOpen(false)}
-            onSubmit={handleUpdateSubmit}
+            onSubmit={handleFormSubmit}
           />
         </FuncDialog>
       ) : null}
       {initialData ? (
         <RichTable
+          onAddDataOpen={handleOpenForm}
           initialData={initialData}
           mapping={mapping}
           onDelete={(id: string) => handleDelete(id)}

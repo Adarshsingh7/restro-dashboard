@@ -98,6 +98,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
             <FormField
               control={form.control}
               name="name"
+              rules={{ required: "Name is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -108,7 +109,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -116,6 +117,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
             <FormField
               control={form.control}
               name="description"
+              rules={{ required: "Description is required" }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
@@ -128,7 +130,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -137,6 +139,10 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
               <FormField
                 control={form.control}
                 name="price"
+                rules={{
+                  required: "Price is required",
+                  min: { value: 0, message: "Price must be at least 0" },
+                }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Price ($)</FormLabel>
@@ -150,7 +156,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -158,14 +164,17 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
               <FormField
                 control={form.control}
                 name="stock"
-                defaultValue={initialData?.stock}
+                rules={{
+                  required: "Stock is required",
+                  min: { value: 0, message: "Stock must be at least 0" },
+                }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Stock</FormLabel>
                     <FormControl>
                       <Input type="number" min="0" placeholder="0" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -175,6 +184,13 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
               <FormField
                 control={form.control}
                 name="preparationTime"
+                rules={{
+                  required: "Preparation time is required",
+                  min: {
+                    value: 0,
+                    message: "Preparation time must be at least 0",
+                  },
+                }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Prep Time (min)</FormLabel>
@@ -187,7 +203,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -195,6 +211,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
               <FormField
                 control={form.control}
                 name="category"
+                rules={{ required: "Category is required" }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
@@ -210,12 +227,12 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                       <SelectContent>
                         <SelectItem value="appetizer">Appetizer</SelectItem>
                         <SelectItem value="main course">Main Course</SelectItem>
-                        <SelectItem value="desert">Desert</SelectItem>
+                        <SelectItem value="dessert">Dessert</SelectItem>
                         <SelectItem value="beverages">Beverages</SelectItem>
                         <SelectItem value="snacks">Snacks</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
@@ -241,12 +258,13 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                   <FormField
                     control={form.control}
                     name="image"
+                    rules={{ required: "Image URL is required" }}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
                           <Input placeholder="Enter image URL" {...field} />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-500" />
                       </FormItem>
                     )}
                   />

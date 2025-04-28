@@ -35,6 +35,7 @@ interface RichTableProps {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   label: string;
+  onAddDataOpen?: () => void;
 }
 
 const RichTable = function ({
@@ -42,6 +43,7 @@ const RichTable = function ({
   mapping,
   onEdit,
   onDelete,
+  onAddDataOpen,
   label,
 }: RichTableProps) {
   const data = initialData;
@@ -105,7 +107,7 @@ const RichTable = function ({
   };
 
   const handleAddRecord = () => {
-    console.log("adding record");
+    onAddDataOpen();
   };
 
   return (

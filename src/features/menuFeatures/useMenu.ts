@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MenuItem } from "../../types/menuType";
 import { menu } from "./menuFeatures";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 const useMenu = () => {
   const { data, isLoading, error } = useQuery<MenuItem[]>({
@@ -26,10 +27,10 @@ const useUpdateMenuItem = () => {
       queryClient.invalidateQueries(["menuItem"]);
       // Handle success
     },
-    onError: (error: unknown) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       // Handle error
       console.log(error);
-      toast.error("Failed to update menu");
+      toast.error(error?.response?.data?.message);
     },
   });
 
@@ -43,11 +44,11 @@ const useDeleteMenuItem = () => {
   const { mutateAsync } = useMutation({
     mutationFn: ({ id }: { id: string }) => menu.deleteMenu(id),
     onSuccess: () => {
-      toast.success("MenuItem deleted successfully");
+      toast.success("Item deleted successfully");
       queryClient.invalidateQueries(["menuItem"]);
       // Handle success
     },
-    onError: (error: unknown) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       // Handle error
       console.log(error);
       toast.error("Failed to delete menu");
@@ -69,10 +70,12 @@ const useAddProduct = () => {
       queryClient.invalidateQueries(["menuItem"]);
       // Handle success
     },
-    onError: (error: unknown) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       // Handle error
       console.log(error);
-      toast.error("Failed to add product");
+      toast.error(
+        error?.response?.data?.message || "failed to add the menu item",
+      );
     },
   });
 
