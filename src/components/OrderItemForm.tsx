@@ -46,10 +46,8 @@ export default function CompactOrderDetails({ initialData }: Props) {
 
   const { data: menuItems, isLoading } = useMenu();
   const filteredMenuItems = getOrderedMenuItems(menuItems || [], initialData);
-
   // Calculate total number of slides
   const totalSlides = Math.ceil(filteredMenuItems.length / itemsPerSlide);
-
   // Status options
   const statusOptions = ["new", "preparing", "completed", "cancelled"];
   const paymentStatusOptions = ["pending", "paid", "failed"];
@@ -226,6 +224,7 @@ export default function CompactOrderDetails({ initialData }: Props) {
                       id: order._id,
                       updatedData: {
                         ...order,
+                        update: true,
                         paymentStatus: value as "pending" | "paid" | "failed",
                       },
                     });
@@ -254,6 +253,16 @@ export default function CompactOrderDetails({ initialData }: Props) {
                     handleStatusChange(
                       value as "new" | "preparing" | "completed" | "cancelled",
                     );
+                    const updatedItems = order.items.map((item) => {
+                      const menuItemData = filteredMenuItems.find(
+                        (menu) => menu._id === item.menuItem,
+                      );
+                      return {
+                        ...item,
+                        name: menuItemData ? menuItemData.name : "Unknown",
+                      };
+                    });
+                    order.items = updatedItems;
                     updateOrder({
                       id: order._id,
                       updatedData: {

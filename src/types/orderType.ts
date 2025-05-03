@@ -1,5 +1,5 @@
 export interface OrderItem {
-  menuItem: string; // Assuming it's a MongoDB ObjectId as a string
+  menuItem: string | { name: string }; // Assuming it's a MongoDB ObjectId as a string
   variant?: string; // Variant is a mixed type, so we use Record<string, any>
   quantity: number;
   price: number;
@@ -14,6 +14,7 @@ export interface Order {
   totalAmount: number;
   recipientName: string;
   recipientEmail: string;
+  update: boolean;
   recipientPhoneNumber: string;
   status: "new" | "preparing" | "completed" | "cancelled"; // Enum for status
   paymentStatus: "pending" | "paid" | "failed"; // Enum for payment status

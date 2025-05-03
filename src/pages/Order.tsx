@@ -66,7 +66,6 @@ const Product: FC = () => {
   };
 
   const handleEdit = (id: string) => {
-    console.log(id);
     setIsFormOpen(true);
     setSelectedOrder(null);
     const order = initialData.find((o: Order) => o._id === id);
