@@ -3,6 +3,7 @@ import { MenuItem } from "../../types/menuType";
 import { menu } from "./menuFeatures";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { User } from "@/type";
 
 const useMenu = () => {
   const { data, isLoading, error } = useQuery<MenuItem[]>({
@@ -14,13 +15,13 @@ const useMenu = () => {
 
 const useUpdateMenuItem = () => {
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: ({
       id,
       updatedData,
     }: {
       id: string;
-      updatedData: Partial<MenuItem>;
+      updatedData: Partial<MenuItem> | FormData;
     }) => menu.updateMenu(id, updatedData),
     onSuccess: () => {
       toast.success("MenuItem updated successfully");
@@ -36,17 +37,17 @@ const useUpdateMenuItem = () => {
 
   return {
     updateMenuItem: mutateAsync,
+    isLoading,
   };
 };
 
 const useDeleteMenuItem = () => {
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: ({ id }: { id: string }) => menu.deleteMenu(id),
     onSuccess: () => {
       toast.success("Item deleted successfully");
       queryClient.invalidateQueries(["menuItem"]);
-      // Handle success
     },
     onError: (error: AxiosError<{ message: string }>) => {
       // Handle error
@@ -57,18 +58,20 @@ const useDeleteMenuItem = () => {
 
   return {
     deleteMenuItem: mutateAsync,
+    isLoading,
   };
 };
 
 const useAddProduct = () => {
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation({
-    mutationFn: ({ data }: { data: Partial<MenuItem> }) =>
-      menu.createMenu(data),
+  const { data: user } = useQuery<User>({ queryKey: ["user"] });
+
+  const { mutateAsync, isLoading } = useMutation({
+    mutationFn: ({ data }: { data: Partial<MenuItem> | FormData }) =>
+      menu.createMenu({ ...data, owner: user?._id }),
     onSuccess: () => {
       toast.success("Product added successfully");
       queryClient.invalidateQueries(["menuItem"]);
-      // Handle success
     },
     onError: (error: AxiosError<{ message: string }>) => {
       // Handle error
@@ -81,6 +84,7 @@ const useAddProduct = () => {
 
   return {
     addProduct: mutateAsync,
+    isLoading,
   };
 };
 

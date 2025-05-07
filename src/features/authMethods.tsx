@@ -1,22 +1,12 @@
+import { User } from "@/type";
 import axios, { AxiosInstance } from "axios";
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  phone: string;
-  photo: string;
-  role: "admin" | "user";
-  passwordChangedAt: string;
-  __v: number;
-}
 
 class Auth {
   private api: AxiosInstance;
 
   constructor() {
     this.api = axios.create({
-      baseURL: "https://oyster-app-s59tr.ondigitalocean.app/api/v1/users",
+      baseURL: "http://localhost:8080/api/v1/users",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.getToken()}`,

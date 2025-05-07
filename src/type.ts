@@ -7,6 +7,17 @@ interface Variant {
   };
 }
 
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  phone: string;
+  photo: string;
+  role: "admin" | "user";
+  passwordChangedAt: string;
+  __v: number;
+}
+
 interface MenuItem {
   _id: string;
   name: string;
@@ -32,4 +43,4 @@ interface MenuItem {
   __v: number;
 }
 
-export type { MenuItem };
+export type { MenuItem, User };

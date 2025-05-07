@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { auth } from "./authController";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 type User = ReturnType<typeof auth.isAuthenticated>;
 
 interface Error {

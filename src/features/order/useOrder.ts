@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { order } from "./order";
 import { Order } from "@/types/orderType";
 import { toast } from "sonner";
+import { User } from "@/type";
 
 const useOrders = () => {
   const {
@@ -18,6 +19,7 @@ const useOrders = () => {
 
 const useUpdateOrder = () => {
   const queryClient = useQueryClient();
+
   const { mutateAsync } = useMutation({
     mutationFn: ({
       id,

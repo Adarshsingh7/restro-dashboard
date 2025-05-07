@@ -23,6 +23,8 @@ interface MenuItem {
   discount: number;
   stock: number;
   isAvailable: boolean;
+  owner: string;
+  file?: File | null;
   createdAt: {
     $date: string;
   };

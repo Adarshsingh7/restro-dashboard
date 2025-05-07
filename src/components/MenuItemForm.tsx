@@ -29,10 +29,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Link as LinkIcon } from "lucide-react";
 import { MenuItem } from "@/types/menuType";
+import {
+  useAddProduct,
+  useUpdateMenuItem,
+} from "@/features/menuFeatures/useMenu";
+import CenteredLoader from "@/ui/CenteredLoader";
 
 type Props = {
   initialData?: MenuItem | null;
-  onSubmit: (values: Partial<MenuItem>) => void;
+  onCloseForm: () => void;
   onCancel: () => void;
 };
 
@@ -40,6 +45,9 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
   const [imageUploadType, setImageUploadType] = useState<"url" | "file">("url");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const { addProduct: createMenuItem, isLoading: creating } = useAddProduct();
+  const { updateMenuItem, isLoading: updating } = useUpdateMenuItem();
 
   const form = useForm<Partial<MenuItem>>({
     defaultValues: initialData || {
@@ -50,6 +58,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
       preparationTime: 0,
       category: "appetizer",
       image: "",
+      file: null,
     },
   });
 
@@ -60,17 +69,44 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
-      // form.setValue("imageFile", file);
+    }
+  };
+
+  const logFormData = (formData: FormData) => {
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
     }
   };
 
   const handleFormSubmit = (values: Partial<MenuItem>) => {
-    // Combine form values with the selected file if using file upload
-    const submitData = {
-      ...values,
-      imageFile: imageUploadType === "file" ? selectedFile : null,
-    };
-    onSubmit(submitData);
+    const formData = new FormData();
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value instanceof File ? value : String(value));
+      }
+    });
+
+    // If an image file is selected, use FormData (with fieldName)
+    if (selectedFile) {
+      console.log(selectedFile);
+      formData.append("file", selectedFile);
+      formData.append("fieldName", "image"); // Required by backend
+      logFormData(formData);
+
+      if (values._id) {
+        updateMenuItem({ id: values._id, updatedData: formData });
+      } else {
+        createMenuItem({ data: formData });
+      }
+    } else {
+      // No file selected, send raw values (non-FormData)
+      if (values._id) {
+        updateMenuItem({ id: values._id, updatedData: values });
+      } else {
+        createMenuItem({ data: values });
+      }
+    }
   };
 
   const handleCancel = () => {
@@ -81,6 +117,9 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
     setImagePreview(null);
     if (imagePreview) URL.revokeObjectURL(imagePreview);
   };
+
+  if (updating || creating)
+    return <CenteredLoader isLoading={updating || creating} />;
 
   return (
     <Card className="w-full max-w-lg border-0 shadow-none">
@@ -279,7 +318,7 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                     />
                     <div className="mt-2">
                       <img
-                        src={initialData?.image}
+                        src={imagePreview}
                         alt="Preview"
                         className="h-32 w-auto object-cover rounded border"
                       />

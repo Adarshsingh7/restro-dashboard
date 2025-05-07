@@ -5,12 +5,7 @@ import { FC, useState } from "react";
 import CenteredLoader from "@/ui/CenteredLoader";
 import { FuncDialog } from "@/components/FuncDialog";
 import MenuItemForm from "@/components/MenuItemForm";
-import {
-  useAddProduct,
-  useDeleteMenuItem,
-  useMenu,
-  useUpdateMenuItem,
-} from "@/features/menuFeatures/useMenu";
+import { useDeleteMenuItem, useMenu } from "@/features/menuFeatures/useMenu";
 import { MenuItem } from "@/types/menuType";
 
 const Product: FC = () => {
@@ -18,8 +13,6 @@ const Product: FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const { openDeleteDialog } = useDialog();
-  const { addProduct } = useAddProduct();
-  const { updateMenuItem } = useUpdateMenuItem();
   const { deleteMenuItem } = useDeleteMenuItem();
 
   const mapping = [
@@ -44,15 +37,6 @@ const Product: FC = () => {
       initialData.find((item: MenuItem) => item._id === id) || null;
     setSelectedItem(selected);
   };
-  const handleFormSubmit = async (data: Partial<MenuItem>) => {
-    if (!selectedItem) {
-      addProduct({ data });
-      setIsFormOpen(false);
-      return;
-    }
-    await updateMenuItem({ id: selectedItem._id, updatedData: data });
-    setIsFormOpen(false);
-  };
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
@@ -74,7 +58,7 @@ const Product: FC = () => {
           <MenuItemForm
             initialData={selectedItem}
             onCancel={() => setIsFormOpen(false)}
-            onSubmit={handleFormSubmit}
+            onCloseForm={() => setIsFormOpen(false)}
           />
         </FuncDialog>
       ) : null}
