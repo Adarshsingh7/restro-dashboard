@@ -5,13 +5,14 @@ import { toast } from "sonner";
 import { User } from "@/type";
 
 const useOrders = () => {
+  const { data: authUser } = useQuery<User>({ queryKey: ["user"] });
   const {
     data: orders,
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["orders"],
-    queryFn: order.getAllOrders,
+    queryFn: () => order.getAllOrders(authUser?._id),
   });
 
   return { orders, isLoading, isError };

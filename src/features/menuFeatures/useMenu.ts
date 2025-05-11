@@ -6,9 +6,11 @@ import { AxiosError } from "axios";
 import { User } from "@/type";
 
 const useMenu = () => {
+  const { data: authUser } = useQuery<User>({ queryKey: ["user"] });
+
   const { data, isLoading, error } = useQuery<MenuItem[]>({
     queryKey: ["menuItem"],
-    queryFn: menu.getAllMenu,
+    queryFn: () => menu.getAllMenu(authUser?._id),
   });
   return { data, isLoading, error };
 };

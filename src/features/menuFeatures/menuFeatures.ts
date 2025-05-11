@@ -24,10 +24,11 @@ class MenuService {
   }
 
   // Get all orders
-  public async getAllMenu(): Promise<MenuItem[]> {
+  public async getAllMenu(restroId: string | undefined): Promise<MenuItem[]> {
     try {
-      const response: AxiosResponse<{ data: { data: MenuItem[] } }> =
-        await this.api.get("/");
+      const response: AxiosResponse<{ data: { data: MenuItem[] } }> = restroId
+        ? await this.api.get(`/?owner=${restroId}`)
+        : await this.api.get(`/`);
       return response.data.data.data;
     } catch (error) {
       console.error("Error fetching menu:", error);

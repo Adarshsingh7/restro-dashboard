@@ -21,10 +21,12 @@ class OrderService {
   }
 
   // Get all orders
-  public async getAllOrders(): Promise<Order[]> {
+  public async getAllOrders(restroId: string | undefined): Promise<Order[]> {
+    console.log(restroId);
     try {
-      const response: AxiosResponse<{ data: { data: Order[] } }> =
-        await this.api.get("/");
+      const response: AxiosResponse<{ data: { data: Order[] } }> = restroId
+        ? await this.api.get(`/?owner=${restroId}`)
+        : await this.api.get(`/`);
       return response.data.data.data;
     } catch (error) {
       console.error("Error fetching orders:", error);
