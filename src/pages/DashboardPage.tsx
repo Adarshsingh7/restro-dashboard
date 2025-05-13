@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Bar,
   BarChart,
@@ -39,6 +38,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { CalendarComponent } from "@/components/CalendarComponent";
 
 export default function DashboardPage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -170,12 +170,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="flex justify-start gap-2">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-              />
+              <CalendarComponent />
               <TimeAndLocation />
             </div>
             <div className="mt-4">

@@ -27,7 +27,11 @@ const useHandleLogin = () => {
   const queryClient = useQueryClient();
   const { refetch } = useIsAuthenticated();
 
-  const { mutate, isPending, isError } = useMutation({
+  const {
+    mutate,
+    isLoading: isPending,
+    isError,
+  } = useMutation({
     mutationFn: auth.login,
     onSuccess: () => {
       toast.success("Logged in successfully");

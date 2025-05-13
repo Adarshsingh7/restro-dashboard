@@ -107,7 +107,9 @@ const RichTable = function ({
   };
 
   const handleAddRecord = () => {
-    onAddDataOpen();
+    if (onAddDataOpen) {
+      onAddDataOpen();
+    }
   };
 
   return (

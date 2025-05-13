@@ -41,10 +41,12 @@ type Props = {
   onCancel: () => void;
 };
 
-const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
+const MenuItemForm = ({ initialData = null, onCancel }: Props) => {
   const [imageUploadType, setImageUploadType] = useState<"url" | "file">("url");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  console.log(imageUploadType);
 
   const { addProduct: createMenuItem, isLoading: creating } = useAddProduct();
   const { updateMenuItem, isLoading: updating } = useUpdateMenuItem();
@@ -317,11 +319,13 @@ const MenuItemForm = ({ initialData = null, onSubmit, onCancel }: Props) => {
                       className="cursor-pointer"
                     />
                     <div className="mt-2">
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="h-32 w-auto object-cover rounded border"
-                      />
+                      {imagePreview && (
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="h-32 w-auto object-cover rounded border"
+                        />
+                      )}
                     </div>
                   </div>
                 </TabsContent>
