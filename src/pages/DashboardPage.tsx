@@ -41,7 +41,6 @@ import { useEffect, useState } from "react";
 import { CalendarComponent } from "@/components/CalendarComponent";
 
 export default function DashboardPage() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
